@@ -1,0 +1,22 @@
+<div class="card mt-2">
+    <p-table [value]="(users$ | async) ?? []">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>№</th>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" ngFor let-user [ngForOf]="users$ | async">
+            <tr>
+                <td>{{ user.index }}</td>
+                <td>{{ user.id }}</td>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.phone }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

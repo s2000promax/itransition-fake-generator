@@ -1,0 +1,13 @@
+<div class="flex flex-wrap gap-3">
+    <div class="flex align-items-center" *ngFor="let item of countries">
+        <p-radioButton
+            name="country"
+            [value]="item.value"
+            [(ngModel)]="selectedCountry"
+            [inputId]="item.id"
+            [id]="item.id"
+            (click)="onChangeCountry()"
+        ></p-radioButton>
+        <label [for]="item.id" class="ml-2">{{ item.label }}</label>
+    </div>
+</div>

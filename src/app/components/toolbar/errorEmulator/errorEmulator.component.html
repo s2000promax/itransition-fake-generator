@@ -1,0 +1,21 @@
+<div class="card flex flex-wrap gap-3 p-fluid">
+    <div class="flex-auto">
+        <p-inputNumber
+            [(ngModel)]="fieldValue"
+            mode="decimal"
+            [maxFractionDigits]="2"
+            [min]="0"
+            [max]="fieldMaxValue"
+            (onInput)="updateSliderValue()"
+        >
+        </p-inputNumber>
+        <p-slider
+            [(ngModel)]="sliderValue"
+            [min]="0"
+            [max]="sliderMaxValue"
+            [step]="sliderStep"
+            (onChange)="updateFieldValue()"
+        >
+        </p-slider>
+    </div>
+</div>

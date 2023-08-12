@@ -1,0 +1,10 @@
+<div class="card flex justify-content-center">
+    <p-inputNumber
+        [(ngModel)]="seedValue"
+        mode="decimal"
+        [min]="0"
+        (onInput)="updateSeedValue()"
+    >
+    </p-inputNumber>
+    <p-button label="Random" class="ml-2" (click)="getRandomSeed()"></p-button>
+</div>
