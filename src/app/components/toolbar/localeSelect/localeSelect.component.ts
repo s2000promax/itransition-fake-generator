@@ -1,9 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LocalesEnums } from '../../../types/localesEnums';
+import { AppService } from '../../../services/app.service';
 
-interface Countries {
-    value: string;
+interface Locale {
+    value: LocalesEnums;
     label: string;
-    id: string;
+    id: LocalesEnums;
 }
 
 @Component({
@@ -11,21 +13,35 @@ interface Countries {
     templateUrl: './localeSelect.component.html',
 })
 export class LocaleSelectComponent implements OnInit {
-    selectedCountry: string = 'American';
+    selectedLocale: LocalesEnums = LocalesEnums.de_DE;
 
-    countries: Countries[] = [
-        { value: 'American', label: 'USA', id: 'usa' },
-        { value: 'Poland', label: 'PL', id: 'pl' },
-        { value: 'Belarusian', label: 'BL', id: 'bl' },
-    ];
+    countries!: Locale[];
 
-    @Output() countryChanged = new EventEmitter<string>();
+    constructor(private appService: AppService) {}
 
     ngOnInit() {
+        this.countries = [
+            {
+                value: LocalesEnums.de_DE,
+                label: 'German',
+                id: LocalesEnums.de_DE,
+            },
+            {
+                value: LocalesEnums.it_IT,
+                label: 'Italian',
+                id: LocalesEnums.it_IT,
+            },
+            {
+                value: LocalesEnums.uk_UK,
+                label: 'Ukrainian',
+                id: LocalesEnums.uk_UK,
+            },
+        ];
+
         this.onChangeCountry();
     }
 
     onChangeCountry() {
-        this.countryChanged.emit(this.selectedCountry);
+        this.appService.setLocale(this.selectedLocale);
     }
 }

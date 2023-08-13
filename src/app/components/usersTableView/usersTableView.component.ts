@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../types/user.interface';
 import { AppService } from '../../services/app.service';
-import { TableLazyLoadEvent } from 'primeng/table';
 import { Subscription } from 'rxjs';
 
 interface Columns {
