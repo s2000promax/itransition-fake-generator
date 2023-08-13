@@ -1,22 +1,40 @@
 <div class="card mt-2">
-    <p-table [value]="(users$ | async) ?? []">
-        <ng-template pTemplate="header">
+    <table class="header-table">
+        <thead>
             <tr>
-                <th>№</th>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Address</th>
-                <th>Phone</th>
+                <th *ngFor="let col of cols">{{ col.header }}</th>
             </tr>
-        </ng-template>
-        <ng-template pTemplate="body" ngFor let-user [ngForOf]="users$ | async">
-            <tr>
-                <td>{{ user.index }}</td>
-                <td>{{ user.id }}</td>
-                <td>{{ user.fullName }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ user.phone }}</td>
+        </thead>
+    </table>
+
+    <table
+        class="scrollable-table"
+        infinite-scroll
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        [fromRoot]="true"
+        [infiniteScrollContainer]="'.scrollable-table'"
+        (scrolled)="onScrollDown()"
+        (scrolledUp)="onScrollUp()"
+    >
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>
+                    {{ user.index }}
+                </td>
+                <td>
+                    {{ user.id }}
+                </td>
+                <td>
+                    {{ user.fullName }}
+                </td>
+                <td>
+                    {{ user.address }}
+                </td>
+                <td>
+                    {{ user.phone }}
+                </td>
             </tr>
-        </ng-template>
-    </p-table>
+        </tbody>
+    </table>
 </div>

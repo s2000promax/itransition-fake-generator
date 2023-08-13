@@ -12,6 +12,8 @@ export class AppService {
     private usersSubject = new BehaviorSubject<User[]>([]);
     users$ = this.usersSubject.asObservable();
 
+    currentPage = new BehaviorSubject<number>(0);
+
     constructor(private usersGenerator: UsersGeneratorService) {
         this.setSeed(this.seedSubject.value);
     }
@@ -22,18 +24,24 @@ export class AppService {
 
     setSeed(seed: number) {
         this.seedSubject.next(seed);
-        this.setUsers(seed);
+        this.currentPage.next(0);
+        this.usersGenerator.setSeed(seed);
+
+        this.setUsers();
     }
 
     get getUsers$() {
         return this.users$;
     }
 
-    setUsers(seed: number) {
-        this.usersGenerator.setSeed(seed);
-
-        const users = this.usersGenerator.getFakeUsersPage(0, 10);
-        console.log(users);
-        this.usersSubject.next(users);
+    setUsers(page: number = 0) {
+        if (page === 0) {
+            const newUsers = this.usersGenerator.getFakeUsersPage(page, 20);
+            this.usersSubject.next(newUsers);
+        } else {
+            this.usersGenerator.setSeed(this.seedSubject.value);
+            const newUsers = this.usersGenerator.getFakeUsersPage(page, 10);
+            this.usersSubject.next([...this.usersSubject.value, ...newUsers]);
+        }
     }
 }
