@@ -4,6 +4,7 @@ import { User } from '../types/user.interface';
 import { LocalesEnums } from '../types/localesEnums';
 import { UsersGeneratorFakerService } from './users-generator/users-generator-faker.service';
 import { ErrorSimulator } from '../libs/error-simulator';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 
 @Injectable({
     providedIn: 'root',
@@ -89,5 +90,13 @@ export class AppService {
                 this.usersSubject.next(errorSimulatedUsers);
             }
         }
+    }
+
+    exportToCSV() {
+        const options = {
+            title: 'Fake users data',
+            headers: ['Index', 'ID', 'Full Name', 'Address', 'Phone'],
+        };
+        new ngxCsv(this.usersSubject.value, 'FakeUsers', options);
     }
 }
