@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { AppService } from '../../../services/app.service';
 
 @Component({
     selector: 'mc-error-emulator',
@@ -12,19 +13,19 @@ export class ErrorEmulatorComponent {
     sliderMaxValue: number = 10;
     sliderStep: number = 0.25;
 
-    @Output() errorValueChanged = new EventEmitter<number>();
+    constructor(private appService: AppService) {}
 
     updateSliderValue() {
         this.sliderValue = Math.min(this.fieldValue, this.sliderMaxValue);
-        this.setErrorValueChanged(this.sliderValue);
+        this.setErrorValueChanged();
     }
 
     updateFieldValue() {
         this.fieldValue = this.sliderValue;
-        this.setErrorValueChanged(this.fieldValue);
+        this.setErrorValueChanged();
     }
 
-    private setErrorValueChanged(value: number) {
-        this.errorValueChanged.emit(value);
+    private setErrorValueChanged() {
+        this.appService.setErrors(Math.max(this.fieldValue, this.sliderValue));
     }
 }

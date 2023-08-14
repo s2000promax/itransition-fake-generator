@@ -1,22 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AppService } from '../../../services/app.service';
 
 @Component({
     selector: 'mc-seed',
     templateUrl: './seed.component.html',
 })
-export class SeedComponent implements OnInit {
-    seedValue!: number;
+export class SeedComponent {
+    seedValue: number = 0;
 
     constructor(private appService: AppService) {}
-
-    ngOnInit() {
-        this.initializeValues();
-    }
-
-    private initializeValues() {
-        this.seedValue = this.appService.getSeed;
-    }
 
     updateSeedValue() {
         this.setSeed(this.seedValue);

@@ -37,11 +37,9 @@ export class LocaleSelectComponent implements OnInit {
                 id: LocalesEnums.uk_UK,
             },
         ];
-
-        this.onChangeCountry();
     }
 
-    onChangeCountry() {
+    onChangeLocale() {
         this.appService.setLocale(this.selectedLocale);
     }
 }

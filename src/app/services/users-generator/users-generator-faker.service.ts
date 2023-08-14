@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../types/user.interface';
 import {
+    de,
+    en_US,
     Faker,
     fakerEN_US,
-    en_US,
-    de,
     it,
-    uk,
     LocaleDefinition,
+    uk,
 } from '@faker-js/faker';
 import { LocalesEnums } from '../../types/localesEnums';
-
-interface LocalFormats {
-    country: string;
-    phoneFormat: string[];
-    locationType: string[];
-}
+import { DictionaryType } from '../../types/local.formats';
+import { Dictionary } from '../../const/dictionary';
 
 @Injectable({
     providedIn: 'root',
@@ -25,16 +21,16 @@ export class UsersGeneratorFakerService {
     private seed: number = 0;
     private locale: LocaleDefinition = de;
 
-    private dictionary: Record<LocalesEnums, LocalFormats>;
+    private dictionary: DictionaryType;
     private country!: string;
     private phoneFormat!: string[];
     private locationType!: string[];
 
     constructor() {
-        this.dictionary = this.getDictionary();
+        this.dictionary = Dictionary();
     }
 
-    setSeedAndLocale(seed: number, locale: LocalesEnums) {
+    setSeedLocaleErrors(seed: number, locale: LocalesEnums) {
         this.locale = this.getLocaleDefinition(locale);
         this.country = this.dictionary[locale].country;
         this.phoneFormat = this.dictionary[locale].phoneFormat;
@@ -123,40 +119,5 @@ export class UsersGeneratorFakerService {
             default:
                 return de;
         }
-    }
-
-    private getDictionary() {
-        return {
-            [LocalesEnums.de_DE]: {
-                country: 'Duitsland',
-                locationType: ['Stad', 'Dorp', 'Gemeente'],
-                phoneFormat: [
-                    '+49 (###) ## ###-##-##',
-                    '+49-###-##-###-##-##',
-                    '+49(###) ### ## ## ##',
-                    '(0##) ####-####',
-                ],
-            },
-            [LocalesEnums.it_IT]: {
-                country: 'Italia',
-                locationType: ['Città', 'Villaggio', 'Comune'],
-                phoneFormat: [
-                    '####-####',
-                    '+39-06-####-####',
-                    '+39(###) ### ## ## ##',
-                    '06 6 ####-####',
-                ],
-            },
-            [LocalesEnums.uk_UK]: {
-                country: 'Україна',
-                locationType: ['Місто', 'Село', 'Містечко'],
-                phoneFormat: [
-                    '+380 (###) ###-##-##',
-                    '+380-###-###-##-##',
-                    '+380 692 ### ## ##',
-                    '+380 65 ####-####',
-                ],
-            },
-        };
     }
 }

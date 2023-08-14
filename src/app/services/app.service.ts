@@ -3,12 +3,15 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../types/user.interface';
 import { LocalesEnums } from '../types/localesEnums';
 import { UsersGeneratorFakerService } from './users-generator/users-generator-faker.service';
+import { ErrorSimulator } from '../libs/error-simulator';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppService {
-    private seedSubject = new BehaviorSubject<number>(0);
+    private errors = new BehaviorSubject<number>(0);
+
+    private seed = new BehaviorSubject<number>(0);
 
     private locale = new BehaviorSubject<LocalesEnums>(LocalesEnums.de_DE);
 
@@ -18,27 +21,47 @@ export class AppService {
     currentPage = new BehaviorSubject<number>(0);
 
     constructor(private usersGenerator: UsersGeneratorFakerService) {
-        this.setSeed(this.seedSubject.value);
+        this.initializeValues();
     }
 
-    get getSeed() {
-        return this.seedSubject.value;
-    }
-
-    setSeed(seed: number) {
-        this.seedSubject.next(seed);
-        this.currentPage.next(0);
-        this.usersGenerator.setSeedAndLocale(seed, this.locale.value);
-
-        this.setUsers();
+    initializeValues() {
+        this.regenerateUsers();
     }
 
     setLocale(locale: LocalesEnums) {
         this.locale.next(locale);
-        this.currentPage.next(0);
-        this.usersGenerator.setSeedAndLocale(this.seedSubject.value, locale);
 
+        this.regenerateUsers();
+    }
+
+    setErrors(value: number) {
+        this.errors.next(value);
+
+        this.regenerateUsers();
+    }
+
+    setSeed(seed: number) {
+        this.seed.next(seed);
+
+        this.regenerateUsers();
+    }
+
+    private regenerateUsers() {
+        this.currentPage.next(0);
+        this.usersGenerator.setSeedLocaleErrors(
+            this.seed.value,
+            this.locale.value,
+        );
         this.setUsers();
+
+        if (!!this.errors.value) {
+            const errorSimulatedUsers = new ErrorSimulator(
+                this.usersSubject.value,
+                this.errors.value,
+                this.locale.value,
+            ).getUsers;
+            this.usersSubject.next(errorSimulatedUsers);
+        }
     }
 
     get getUsers$() {
@@ -50,12 +73,21 @@ export class AppService {
             const newUsers = this.usersGenerator.getFakeUsersPage(page, 20);
             this.usersSubject.next(newUsers);
         } else {
-            this.usersGenerator.setSeedAndLocale(
-                this.seedSubject.value,
+            this.usersGenerator.setSeedLocaleErrors(
+                this.seed.value,
                 this.locale.value,
             );
             const newUsers = this.usersGenerator.getFakeUsersPage(page, 10);
             this.usersSubject.next([...this.usersSubject.value, ...newUsers]);
+
+            if (!!this.errors.value) {
+                const errorSimulatedUsers = new ErrorSimulator(
+                    this.usersSubject.value,
+                    this.errors.value,
+                    this.locale.value,
+                ).getUsers;
+                this.usersSubject.next(errorSimulatedUsers);
+            }
         }
     }
 }
